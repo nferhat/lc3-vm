@@ -9,14 +9,17 @@ BINDIR=$(PREFIX)/bin
 
 HARE_SOURCES != find . -name '*.ha'
 
+build-dir:
+	mkdir -p build
+
 all: lc3
 
-lc3: $(HARE_SOURCES)
-	$(HARE) build $(HAREFLAGS) -o $@ cmd/lc3/
+lc3: $(HARE_SOURCES) build-dir
+	$(HARE) build $(HAREFLAGS) -o build/$@ cmd/lc3/
 
 
-run: $(HARE_SOURCES)
-	$(HARE) run $(HAREFLAGS) cmd/lc3 $(ARGS)
+run: $(HARE_SOURCES) lc3
+	./build/lc3
 
 check:
 	$(HARE) test $(HAREFLAGS)
