@@ -25,9 +25,8 @@ export fn handle_st(instr: word, mem: *memory, regs: *registers) void = {
 export fn handle_sti(instr: word, mem: *memory, regs: *registers) void = {
 	const sr    = ((instr >> 9) & 0x7): reg;
 	const off   = utils::sign_extend(instr & 0x1FF, 9);
-	const addr  = (regs[reg::PC] + off): size;
-	const value = memory::read(mem, addr);
-	memory::write(mem, addr, value);
+	const addr  = memory::read(mem, (regs[reg::PC] + off): size);
+	memory::write(mem, addr, regs[sr]);
 };
 
 // Handles a STR instruction
@@ -42,6 +41,6 @@ export fn handle_str(instr: word, mem: *memory, regs: *registers) void = {
 	const br   = ((instr >> 6) & 0x7): reg;
 	const off  = utils::sign_extend(instr & 0x3F, 6);
 	const addr = (regs[br] + off): size;
-	memory::write(mem, addr, sr);
+	memory::write(mem, addr, regs[sr]);
 
 };
