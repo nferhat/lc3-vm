@@ -20,7 +20,14 @@ export fn new() memory = [0...];
 // Reads a given address from memory, returning a WORD.
 // Since we have only fucking ni
 export fn read(mem: *memory, addr: size) word = {
-	// FIXME: Handle kbsr properly
+	if (addr == memoryreg::KBSR) {
+		if (check_key()!) {
+			mem[memoryreg::KBSR] = (1 << 15);
+			mem[memoryreg::KBDR] = getchar();
+		} else {
+			mem[memoryreg::KBSR] = 0;
+		};
+	};
 	return mem[addr];
 };
 
@@ -29,15 +36,6 @@ type memoryreg = enum size { KBSR = 0xFE00, KBDR = 0xFE02 };
 
 // Writes the given `word` inside the address `addr` in memory.
 export fn write(mem: *memory, addr: size, word: word) void = {
-	if (addr == memoryreg::KBSR) {
-		if (check_key()!) {
-			mem[memoryreg::KBSR] = (1 << 15);
-			mem[memoryreg::KBDR] = (getchar()!): u8: u16;
-		} else {
-			mem[memoryreg::KBSR] = 0;
-		};
-	};
-	// FIXME: Handle kbsr properly
 	mem[addr] = word;
 };
 
@@ -57,8 +55,8 @@ fn check_key() (bool | poll::error) = {
 };
 
 // `getchar()` implementation using hare's I/O primitives
-fn getchar() (u8 | io::EOF | fs::error) = {
+fn getchar() word = {
 	let char = 0u8;
 	io::read(os::stdin, &char: *[1]u8)!;
-	return char;
+	return char: word;
 };
