@@ -6,13 +6,6 @@ use io;
 use os;
 use fs;
 
-// Condition flags.
-export type cf = enum uint {
-	POS  = 1 << 0,
-	ZERO = 1 << 1,
-	NEG  = 1 << 2,
-};
-
 // Handle sign extension for words.
 //
 // A lot of instructions take immediate arguments, for example the add instruction
@@ -32,32 +25,4 @@ export fn sign_extend(x: word, bit_count: size) word = {
 	};
 
 	return x;
-};
-
-// Update the `COND` register with the result of `w`.
-export fn cf_update(regs: *registers, r: reg) void = {
-	let res = if (regs[r] == 0) {
-		yield cf::ZERO;
-	} else if ((regs[r] >> 15) == 1) {
-		// Negative values are signed.
-		yield cf::NEG;
-	} else {
-		yield cf::POS;
-	};
-
-	regs[reg::COND] = res: word;
-};
-
-// `getchar()` implementation using hare's I/O primitives
-export fn getchar() word = {
-	let char = 0u8;
-	io::read(os::stdin, &char: *[1]u8)!;
-	return char: word;
-};
-
-// `putc()` implementation using hare's I/O primitives
-export fn putchar(char: word) (size | io::error) = {
-    let res = io::write(os::stdout_file, [char: u8])?;
-    bufio::flush(os::stdout)?;
-    return res;
 };
