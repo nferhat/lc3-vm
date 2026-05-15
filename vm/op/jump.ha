@@ -29,9 +29,18 @@ export fn handle_jmp(instr: word, regs: *registers) void = {
 //
 // Arguments:
 // 1. Bits 15-12 => 1100 (opcode)
-// 2. Bits 10-0   => offset from PC
+// 2. Bit  11    => long flag
+// 3. Bits 10-0  => offset from PC
 export fn handle_jsr(instr: word, regs: *registers) void = {
-	const off = utils::sign_extend(instr & 0x3FF, 11);
-	regs[reg::R7]  = regs[reg::PC];
-	regs[reg::PC] += off;
+	regs[reg::R7]  = regs[reg::PC]; // always save PC in R7
+
+	const long_flag = ((instr >> 11) & 1) == 1;
+	if (long_flag) {
+		let off = utils::sign_extend(instr & 0x7FF, 11);
+		regs[reg::PC] += off;
+	} else {
+		// Case for JSRR instruction
+		let sr = ((instr >> 6) & 0x7): reg;
+		regs[reg::PC] = regs[sr];
+	};
 };
