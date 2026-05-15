@@ -17,7 +17,14 @@ export fn encode(instr: instr) lc3::word = {
         yield encode_bitwise(bitwise);
     case let jump: jump_instr =>
         yield encode_jump(jump);
-    case =>
-        fmt::fatalf("not handled yet");
+    case let load: load_instr =>
+        yield encode_load(load);
+    case let store: store_instr =>
+        yield encode_store(store);
+    case let trap: trap_instr =>
+        let v: u16 = 0;
+        v |= 0b1111 << 12;
+        v |= trap.code;
+        yield v;
     };
 };

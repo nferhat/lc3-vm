@@ -36,3 +36,28 @@ export type ld_instr = struct {
 };
 
 export type load_instr = (ld_instr | ldr_instr | lea_instr | ldi_instr);
+
+export fn encode_load(instr: load_instr) word = {
+    let v: u16 = 0;
+    match (instr) {
+    case let ld: ld_instr =>
+        v |=           0b0010 << 12;
+        v |= (ld.dr  & 0b111) << 9;
+        v |= (ld.off & 0x1FF);
+    case let ldr: ldr_instr =>
+        v |=           0b0110 << 12;
+        v |= (ldr.dr & 0b111) << 9;
+        v |= (ldr.br & 0b111) << 6;
+        v |= (ldr.off & 0x3F);
+    case let lea: lea_instr =>
+        v |=            0b1110 << 12;
+        v |= (lea.dr  & 0b111) << 9;
+        v |= (lea.off & 0x1FF);
+    case let ldi: ldi_instr =>
+        v |=            0b1010 << 12;
+        v |= (ldi.dr  & 0b111) << 9;
+        v |= (ldi.off & 0x1FF);
+    };
+
+    return v;
+};
