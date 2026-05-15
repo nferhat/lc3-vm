@@ -3,10 +3,7 @@ use vm::memory::{word, memory};
 use vm::registers::{registers, reg};
 use vm::utils::{getchar, putchar, cf_update};
 
-use bufio::{flush};
 use strings;
-use fmt;
-use fs;
 use io;
 use os;
 
@@ -28,41 +25,33 @@ export fn handle_trap(instr: word, mem: *memory, regs: *registers) bool = {
 		let addr = regs[reg::R0];
 		for (true) {
 			// FIXME: This can loop until the end of memory like this.
-			let char = memory::read(mem, addr: size): u8;
+			let char = memory::read(mem, addr: size);
 			if (char == 0) break;
-			io::write(os::stdout, [char])!;
-			flush(os::stdout)!;
+			putchar(char)!;
 			addr += 1;
 		};
 
 	case trapcode::GETC =>
-		regs[reg::R0] = getchar()!: u8: u16;
+		regs[reg::R0] = getchar();
 		cf_update(regs, reg::R0);
-
-	case trapcode::OUT =>
-		fmt::printf(strings::fromutf8([regs[reg::R0]: u16: u8])!)!;
-		flush(os::stdout)!;
-
 	case trapcode::IN =>
-		// We need to prompt for a single character.
-		regs[reg::R0] = getchar()!: u8: u16;
-		putchar(regs[reg::R0]: u8)!;
-		flush(os::stdout)!;
+		// The difference between GETC and IN is that GETC doesn't print the character
+		// that was asked for. IN prints it back out.
+		regs[reg::R0] = getchar();
+		putchar(regs[reg::R0])!;
 		cf_update(regs, reg::R0);
+
+	case trapcode::OUT => putchar(regs[reg::R0])!;
 
 	case trapcode::PUTSP =>
 		let addr = regs[reg::R0];
 		// FIXME: This can loop until the end of memory like this.
 		for (true) {
-			// Each word (u16) get split into two chars (2x u8)
 			let value = memory::read(mem, addr: size);
 			if (value == 0) break;
-
-			let c1 = (value & 0xFF): u8;
-			let c2 = ((value >> 8) & 0xFF): u8;
-			io::write(os::stdout, [c1, c2])!;
-			flush(os::stdout)!;
-
+			// Each word (u16) get split into two chars (2x u8)
+			putchar(value & 0xFF)!;
+			putchar((value >> 8) & 0xFF)!;
 			addr += 1;
 		};
 
@@ -72,4 +61,3 @@ export fn handle_trap(instr: word, mem: *memory, regs: *registers) bool = {
 
 	return false;
 };
-

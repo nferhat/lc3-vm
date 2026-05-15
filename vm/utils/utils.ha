@@ -1,6 +1,7 @@
 use vm::registers::{reg, registers};
 use vm::memory::{word};
 
+use bufio;
 use io;
 use os;
 use fs;
@@ -48,12 +49,15 @@ export fn cf_update(regs: *registers, r: reg) void = {
 };
 
 // `getchar()` implementation using hare's I/O primitives
-export fn getchar() (u8 | io::EOF | fs::error) = {
+export fn getchar() word = {
 	let char = 0u8;
 	io::read(os::stdin, &char: *[1]u8)!;
-	return char;
+	return char: word;
 };
 
 // `putc()` implementation using hare's I/O primitives
-export fn putchar(char: u8) (size | io::error) =
-	io::write(os::stdout, [char]);
+export fn putchar(char: word) (size | io::error) = {
+    let res = io::write(os::stdout_file, [char: u8])?;
+    bufio::flush(os::stdout)?;
+    return res;
+};
