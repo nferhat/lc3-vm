@@ -30,6 +30,7 @@ export fn handle_instruction(
 	mem:   *memory,
 	regs:  *registers,
 ) bool = {
+    if (instr == 0) return true;
 	let opcode = (instr >> 12): opcode;
 	switch (opcode) {
 	// Bitwise arithmetic.
