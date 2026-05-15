@@ -1,6 +1,6 @@
-use vm::memory::{word};
-use vm::registers::{registers, reg};
-use vm::utils;
+use lc3;
+use lc3::vm::registers;
+use lc3::vm::utils;
 
 // Bitwise operation type.
 export type bitwise = enum {
@@ -19,9 +19,9 @@ export type bitwise = enum {
 //
 // If in immediate mode, bits 4-0 represent the immediate/inline value to use.
 // if in register mode, bits 2-0 represent the source register two.
-export fn handle_bitwise(instr: word, regs: *registers, kind: bitwise) void = {
-	let dr  = ((instr >> 9) & 0x7): reg;
-	let sr1 = ((instr >> 6) & 0x7): reg;
+export fn handle_bitwise(instr: lc3::word, regs: *registers::registers, kind: bitwise) void = {
+	let dr  = ((instr >> 9) & 0x7): lc3::reg;
+	let sr1 = ((instr >> 6) & 0x7): lc3::reg;
 	let lhs = regs[sr1];
 
 	let immediate = ((instr >> 5) & 0x1) == 1;

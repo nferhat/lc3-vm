@@ -1,7 +1,9 @@
-use vm::memory;
-use vm::memory::{word, memory};
-use vm::registers::{registers, reg};
-use vm::utils;
+use lc3::{word, reg};
+use lc3::vm::registers::{registers};
+use lc3::vm::memory;
+use lc3::vm::memory::{memory};
+use lc3::vm::memory;
+use lc3::vm::utils;
 
 // Handles a ST instruction
 //
@@ -42,5 +44,4 @@ export fn handle_str(instr: word, mem: *memory, regs: *registers) void = {
 	const off  = utils::sign_extend(instr & 0x3F, 6);
 	const addr = (regs[br] + off): size;
 	memory::write(mem, addr, regs[sr]);
-
 };

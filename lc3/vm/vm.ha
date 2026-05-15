@@ -1,17 +1,15 @@
-use vm::memory;
-use vm::memory::{word, memory};
-use vm::registers;
-use vm::registers::{registers, reg};
-use vm::op;
-
 use fmt;
+use lc3::{word};
+use lc3::vm::memory::{memory};
+use lc3::vm::registers::{registers};
+use lc3::vm::op;
 
 // Available operations/instructions for the virtual machine.
 export type opcode = enum uint {
     BR = 0,
     ADD,
-    LD, 
-    ST, 
+    LD,
+    ST,
     JSR,
     AND,
     LDR,
@@ -59,5 +57,3 @@ export fn handle_instruction(
 
 	return false;
 };
-
-

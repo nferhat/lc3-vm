@@ -4,8 +4,8 @@ use io;
 use fmt;
 use endian;
 
-use vm::memory;
-use vm::memory::{memory, word, MEMORY_SIZE};
+use lc3::vm::memory;
+use lc3::vm::memory::{memory};
 
 // Where in virtual memory our program lives. For our architecture, we it will
 // live at address 0x3000 and onwards.

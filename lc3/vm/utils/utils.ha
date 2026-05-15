@@ -1,5 +1,4 @@
-use vm::registers::{reg, registers};
-use vm::memory::{word};
+use lc3::{word};
 
 use bufio;
 use io;

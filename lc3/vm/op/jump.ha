@@ -1,7 +1,7 @@
-use vm::memory;
-use vm::memory::{word};
-use vm::registers::{registers, reg};
-use vm::utils;
+use lc3::{word, reg};
+use lc3::vm::registers::{registers};
+use lc3::vm::utils;
+use lc3::vm::memory;
 
 // Handle a BR instruction.
 //

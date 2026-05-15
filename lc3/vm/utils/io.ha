@@ -1,5 +1,4 @@
-use vm::memory::{word};
-
+use lc3::{word};
 use bufio::{flush};
 use io::{read, write, error};
 use os::{stdout, stdin};

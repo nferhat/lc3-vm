@@ -4,13 +4,12 @@ use fs;
 use os;
 use unix::tty;
 
-use vm;
-use vm::{PC_START};
-use vm::utils::{cf};
-use vm::registers;
-use vm::registers::{reg, registers};
-use vm::memory;
-use vm::memory::{memory};
+use lc3;
+use lc3::{reg};
+use lc3::vm;
+use lc3::vm::memory;
+use lc3::vm::registers;
+use lc3::vm::{PC_START};
 
 use fmt;
 use io;
@@ -43,7 +42,7 @@ export fn main() void = {
 	let regs   = registers::new();
 	// Initialize registers.
 	// Since there should always be a condition set, we start with the Z flag.
-	regs[reg::COND] = cf::ZERO: u16;
+	regs[reg::COND] = lc3::cf::ZERO: u16;
 	regs[reg::PC]   = vm::PC_START;
 
 	let running = true;
@@ -53,7 +52,7 @@ export fn main() void = {
 	};
 };
 
-fn next_instruction(memory: *memory, regs: *registers) u16 = {
+fn next_instruction(memory: *memory::memory, regs: *registers::registers) u16 = {
 	let pc = regs[reg::PC];
 	regs[reg::PC] += 1;
 	return memory::read(memory, pc);

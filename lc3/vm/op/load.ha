@@ -1,8 +1,8 @@
-use vm::memory;
-use vm::memory::{word, memory};
-use vm::registers::{registers, reg};
-use vm::utils;
-use fmt;
+use lc3::{word, reg};
+use lc3::vm::registers::{registers};
+use lc3::vm::memory::{memory};
+use lc3::vm::memory;
+use lc3::vm::utils;
 
 // Handles an LDI instruction.
 //

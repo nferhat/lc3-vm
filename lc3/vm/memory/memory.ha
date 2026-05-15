@@ -4,11 +4,7 @@ use fs;
 use fmt;
 use unix::poll;
 
-// The word type for the VM's memory.
-export type word = u16;
-
-// The memory size for the LC3 architecture.
-export def MEMORY_SIZE: size = 65_536;
+use lc3::{word, MEMORY_SIZE};
 
 // The memory of the VM.
 // With the word size being 2 bytes (u16s), this means there's ~131kB of addressable memory.
