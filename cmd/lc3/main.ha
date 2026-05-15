@@ -54,7 +54,7 @@ export fn main() void = {
 };
 
 fn next_instruction(memory: *memory, regs: *registers) u16 = {
-	let pc = regs[reg::PC];	
+	let pc = regs[reg::PC];
 	regs[reg::PC] += 1;
 	return memory::read(memory, pc);
 };
