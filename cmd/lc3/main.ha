@@ -21,6 +21,8 @@ export fn main() void = {
 		('d', "dump register state at the end"),
 		"<file>",
     );
+	defer getopt::finish(&cmd);
+
 	for (let opt .. cmd.opts) {
 	    switch (opt.0) {
 		case 'd' =>
@@ -28,13 +30,9 @@ export fn main() void = {
 		case => abort();
 		};
 	};
-    defer getopt::finish(&cmd);
 
     if (len(cmd.args) != 1) {
-        getopt::printhelp(os::stdout, os::args[0],
-            [('d', "dump register state at the end"),
-    		"<file>"],
-        )!;
+        getopt::printhelp(os::stdout, os::args[0], cmd.help)!;
         os::exit(os::status::FAILURE);
     };
 
